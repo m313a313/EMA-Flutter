@@ -1,3 +1,5 @@
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:ema/cubit/auht_cubit/auth_cubit.dart';
@@ -36,7 +38,8 @@ class SignupPage extends StatelessWidget {
               inAsyncCall: loading,
               child: SingleChildScrollView(
                 child: Container(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                  margin: const EdgeInsets.all(20),
+                  // padding: const EdgeInsets.symmetric(horizontal: 20),
                   // height: MediaQuery.of(context).size.height,
                   width: double.infinity,
                   child: Column(
@@ -64,8 +67,8 @@ class SignupPage extends StatelessWidget {
                         ],
                       ),
                       const SizedBox(
-                            height: 10,
-                          ),
+                        height: 10,
+                      ),
                       Form(
                         key: formKey,
                         child: Column(
@@ -99,10 +102,11 @@ class SignupPage extends StatelessWidget {
                               validator: (data) {
                                 if (data == '') {
                                   return 'email is empty';
-                                } else if (data!.contains('@') == false)
-                                  {return 'enter a correct email';}
-                                else
-                                  {return null;}
+                                } else if (data!.contains('@') == false) {
+                                  return 'enter a correct email';
+                                } else {
+                                  return null;
+                                }
                               },
                               decoration: InputDecoration(
                                   hintText: "Email",
@@ -121,8 +125,9 @@ class SignupPage extends StatelessWidget {
                               validator: (data) {
                                 if (data == '') {
                                   return 'password is empty';
-                                } else
-                                  {return null;}
+                                } else {
+                                  return null;
+                                }
                               },
                               decoration: InputDecoration(
                                 hintText: "Password",
@@ -140,8 +145,9 @@ class SignupPage extends StatelessWidget {
                               validator: (data) {
                                 if (data != password) {
                                   return 'confirm password is not matching';
-                                } else
-                                  {return null;}
+                                } else {
+                                  return null;
+                                }
                               },
                               onChanged: (data) {
                                 cpassword = data;
@@ -183,8 +189,7 @@ class SignupPage extends StatelessWidget {
                               "Sign up",
                               style: TextStyle(fontSize: 20),
                             ),
-                          )
-                          ),
+                          )),
                       const SizedBox(height: 12),
                       Row(
                         children: [
@@ -250,7 +255,7 @@ class SignupPage extends StatelessWidget {
                               onPressed: () {
                                 Navigator.push(context,
                                     MaterialPageRoute(builder: (context) {
-                                  return  LoginPage();
+                                  return LoginPage();
                                 }));
                               },
                               child: const Text(

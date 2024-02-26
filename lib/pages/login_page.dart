@@ -61,7 +61,7 @@ class LoginPage extends StatelessWidget {
               inAsyncCall: loadingIndicator,
               child: Scaffold(
                 body: Container(
-                  margin: const EdgeInsets.all(24),
+                  margin: const EdgeInsets.all(20),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: [

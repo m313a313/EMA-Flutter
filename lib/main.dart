@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ema/cubit/auht_cubit/auth_cubit.dart';
 import 'package:ema/pages/home_page.dart';
-import 'package:ema/pages/signup_page.dart';
+// import 'package:ema/pages/signup_page.dart';
 // import 'package:ema/pages/splash_screen.dart';
 // import 'package:ema/shared/constants.dart';
 import 'package:ema/shared/network/local_network.dart';
@@ -22,7 +22,7 @@ class Market extends StatelessWidget {
     return BlocProvider(
         create: ((context) => AuthCubit()),
         child: MaterialApp(
-          home:SignupPage(),
+          home:HomePage(),
         ));
   }
 }

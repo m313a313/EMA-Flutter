@@ -1,3 +1,6 @@
+// import 'package:ema/pages/complaints_page.dart';
+import 'package:ema/pages/google_map_page.dart';
+import 'package:ema/pages/profile_page.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
@@ -10,22 +13,14 @@ class HomePage extends StatefulWidget {
 class _HomePageState extends State<HomePage> {
   int _currentIndex = 0;
   final List _pages = [
-    //  const MapScreen(),
-    Container(
-      color: Colors.blue,
-    ),
+    const GoogleMapPage(),
     Container(
       color: Colors.green,
     ),
     Container(
       color: Colors.blue,
     ),
-    Container(
-      color: Colors.red,
-    ),
-    Container(
-      color: Colors.yellow,
-    ),
+    const ProfilePage()
   ];
   @override
   Widget build(BuildContext context) {
@@ -54,7 +49,7 @@ class _HomePageState extends State<HomePage> {
           BottomNavigationBarItem(
               icon: Icon(Icons.favorite), label: 'favorite'),
           BottomNavigationBarItem(
-              icon: Icon(Icons.message_sharp), label: 'message'),
+              icon: Icon(Icons.person), label: 'Profile'),
         ]);
   }
 }
