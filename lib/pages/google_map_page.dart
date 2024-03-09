@@ -1,9 +1,9 @@
 import 'dart:async';
 
+import 'package:ema/place_info/place.dart';
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:ema/Models/places.dart';
-import 'package:ema/pages/place_page.dart';
 
 class GoogleMapPage extends StatefulWidget {
   const GoogleMapPage({super.key});

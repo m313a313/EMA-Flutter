@@ -7,9 +7,9 @@ import 'package:ema/pages/home_page.dart';
 // import 'package:ema/shared/constants.dart';
 import 'package:ema/shared/network/local_network.dart';
 
-void main()async {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
- await LocalNetwork.shared_prefrence_initlzation();
+  await LocalNetwork.shared_prefrence_initlzation();
 //  userId = LocalNetwork.getUserIdFromCash();
   runApp(const Market());
 }
@@ -22,7 +22,12 @@ class Market extends StatelessWidget {
     return BlocProvider(
         create: ((context) => AuthCubit()),
         child: MaterialApp(
-          home:HomePage(),
+          theme: ThemeData(
+              //useMaterial3: false,
+
+              // colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
+              ),
+          home: HomePage(),
         ));
   }
 }
