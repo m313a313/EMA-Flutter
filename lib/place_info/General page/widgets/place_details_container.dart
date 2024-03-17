@@ -1,6 +1,7 @@
 
 
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 class PlaceDetailsContainer extends StatelessWidget {
   const PlaceDetailsContainer({
@@ -45,9 +46,11 @@ class PlaceDetailsContainer extends StatelessWidget {
                   'Description',
                   style: TextStyle(fontSize: 14),
                 ),
-                Text(
-                  'An electric car or electric vehicle (EV) is a passenger automobile that is propelled by an electric traction motor, using only energy stored in on-board batteries. Compared to conventional internal combustion engine (ICE) vehicles, electric cars are quieter, more responsive, have superior energy conversion efficiency and no exhaust emissions and lower overall vehicle emissions',
-                  style: TextStyle(color: Color(0xff808080)),
+                Flexible(
+                  child: Text(
+                    'An electric car or electric vehicle (EV) is a passenger automobile that is propelled by an electric traction motor, using only energy stored in on-board batteries. Compared to conventional internal combustion engine (ICE) vehicles, electric cars are quieter, more responsive, have superior energy conversion efficiency and no exhaust emissions and lower overall vehicle emissions',
+                    style: TextStyle(color: Color(0xff808080)),
+                  ),
                 ),
                 SizedBox(
                   height: 10,

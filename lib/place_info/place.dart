@@ -1,4 +1,5 @@
 import 'package:ema/place_info/General%20page/general_page.dart';
+import 'package:ema/place_info/Offers%20Page/offers_page.dart';
 import 'package:flutter/material.dart';
 import 'package:ema/Models/places.dart';
 
@@ -34,7 +35,7 @@ class _PlacePageState extends State<PlacePage> {
         body: const TabBarView(
           children: [
             GeneralPage(),
-            Text('offers'),
+            OffersPage(),
             Text('comments'),
           ],
         ),
@@ -42,3 +43,4 @@ class _PlacePageState extends State<PlacePage> {
     );
   }
 }
+

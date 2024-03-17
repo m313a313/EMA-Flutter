@@ -23,7 +23,7 @@ class Market extends StatelessWidget {
         create: ((context) => AuthCubit()),
         child: MaterialApp(
           theme: ThemeData(
-              //useMaterial3: false,
+              useMaterial3: true,
 
               // colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
               ),
