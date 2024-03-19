@@ -1,5 +1,6 @@
 import 'package:ema/Models/offers.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:readmore/readmore.dart';
 
@@ -40,8 +41,8 @@ class CustomeCardOffers extends StatefulWidget {
 }
 
 class _CustomeCardOffersState extends State<CustomeCardOffers> {
-    bool isF = false;
-    bool isDisLike = false;
+  bool isF = false;
+  bool isDisLike = false;
   @override
   Widget build(BuildContext context) {
     return Card(
@@ -64,14 +65,13 @@ class _CustomeCardOffersState extends State<CustomeCardOffers> {
                 children: [
                   CostomeIconButton(
                     onPressed: () {
-                       setState(() {
+                      setState(() {
                         isF = !isF;
                       });
                     },
-                    iconF: Icon(isF == false
-                      ?Icons.favorite_border
-                      :Icons.favorite,
-                      ),
+                    iconF: Icon(
+                      isF == false ? Icons.favorite_border : Icons.favorite,
+                    ),
                   ),
                   IconButton(
                       onPressed: () {}, icon: Icon(FontAwesomeIcons.comment)),
@@ -80,27 +80,29 @@ class _CustomeCardOffersState extends State<CustomeCardOffers> {
               Row(
                 children: [
                   Text('End in:12h'),
-                 CostomeIconButton(
+                  CostomeIconButton(
                     onPressed: () {
-                       setState(() {
+                      setState(() {
                         isDisLike = !isDisLike;
                       });
                     },
                     iconF: Icon(isDisLike == false
-                      ? FontAwesomeIcons.thumbsDown
-                      :FontAwesomeIcons.solidThumbsDown
-                      ),
+                        ? FontAwesomeIcons.thumbsDown
+                        : FontAwesomeIcons.solidThumbsDown),
                   ),
                 ],
               )
             ],
           ),
-          ReadMoreText(
-            '${widget.offer.id}${widget.offer.text}',
-            trimLines: 1,
-            trimMode: TrimMode.Line,
-            moreStyle: TextStyle(color: Colors.blue),
-            lessStyle: TextStyle(color: Colors.redAccent[100]),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: ReadMoreText(
+              '${widget.offer.id}${widget.offer.text} ',
+              trimLines: 2,
+              trimMode: TrimMode.Line,
+              moreStyle: TextStyle(color: Colors.blue),
+              lessStyle: TextStyle(color: Colors.redAccent[100]),
+            ),
           )
         ],
       ),
@@ -119,7 +121,6 @@ class CostomeIconButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return IconButton(
-        onPressed: onPressed, icon: iconF);
+    return IconButton(onPressed: onPressed, icon: iconF);
   }
 }
