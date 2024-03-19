@@ -1,7 +1,11 @@
+import 'dart:ffi';
+
 import 'package:ema/place_info/General%20page/general_page.dart';
 import 'package:ema/place_info/Offers%20Page/offers_page.dart';
 import 'package:flutter/material.dart';
 import 'package:ema/Models/places.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 class PlacePage extends StatefulWidget {
   const PlacePage({super.key, required this.place});
@@ -33,14 +37,59 @@ class _PlacePageState extends State<PlacePage> {
           centerTitle: true,
         ),
         body: const TabBarView(
-          children: [
-            GeneralPage(),
-            OffersPage(),
-            Text('comments'),
-          ],
+          children: [GeneralPage(), OffersPage(), MyWidget()],
         ),
       ),
     );
   }
 }
 
+class MyWidget extends StatelessWidget {
+  const MyWidget({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    double userRate = 0.0;
+    return IconButton(
+        onPressed: () {
+          RateDialog(context, userRate);
+        },
+        icon: Icon(Icons.access_alarms_rounded));
+  }
+
+  Future<dynamic> RateDialog(BuildContext context, double userRate) {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return Dialog(
+            shadowColor: Colors.grey,
+            child: Container(          
+              height: 160,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text(
+                    'Rate the place',
+                    style: TextStyle(fontSize: 14, fontWeight: FontWeight.w800),
+                  ),
+                  RatingBar.builder(
+                      initialRating: userRate,
+                      minRating: 0,
+                      itemCount: 5,
+                      itemPadding: EdgeInsets.symmetric(horizontal: 2),
+                      allowHalfRating: true,
+                      itemBuilder: (context, _) => Icon(
+                            Icons.star,
+                            color: Colors.amber,
+                          ),
+                      onRatingUpdate: (rating) {
+                        print(rating);
+                        userRate = rating;
+                      }),
+                ],
+              ),
+            ),
+          );
+        });
+  }
+}

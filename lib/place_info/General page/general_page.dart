@@ -3,20 +3,21 @@ import 'package:ema/place_info/General%20page/widgets/place_details_container.da
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 class GeneralPage extends StatelessWidget {
   const GeneralPage({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+    return ListView(
+      //   crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SizedBox(
+        const SizedBox(
           height: 20,
         ),
-        CustomPlaceImagesListView(),
-        SizedBox(
+        const CustomPlaceImagesListView(),
+        const SizedBox(
           height: 12,
         ),
         Row(
@@ -24,7 +25,7 @@ class GeneralPage extends StatelessWidget {
           children: [
             Column(
               children: [
-                SizedBox(
+                const SizedBox(
                   height: 10,
                 ),
                 Icon(
@@ -32,7 +33,7 @@ class GeneralPage extends StatelessWidget {
                   color: Colors.amber[700],
                   size: 32,
                 ),
-                Row(children: [
+                const Row(children: [
                   Text(
                     '8.5',
                     style: TextStyle(fontSize: 16),
@@ -56,12 +57,15 @@ class GeneralPage extends StatelessWidget {
             ),
             Column(
               children: [
-                Icon(Icons.star_border_rounded,
-                    size: 30, color: Colors.black.withOpacity(0.7)),
+                IconButton(
+                    onPressed: () => RateDialog(context),
+                    icon: const Icon(Icons.star_border_rounded),
+                    iconSize: 30,
+                    color: Colors.black.withOpacity(0.7)),
                 Text('Add rate')
               ],
             ),
-            Column(
+            const Column(
               children: [
                 Icon(Icons.comment_outlined, size: 26),
                 Text('Comments'),
@@ -72,29 +76,86 @@ class GeneralPage extends StatelessWidget {
             )
           ],
         ),
-        Expanded(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            child: PlaceDetailsContainer(),
-          ),
+        Padding(
+          padding: EdgeInsets.symmetric(horizontal: 8.0),
+          child: PlaceDetailsContainer(),
         ),
         Padding(
           padding: const EdgeInsets.all(8.0),
-          child: ElevatedButton.icon(
-            icon: Icon(Icons.route),
-            onPressed: () {},
-            label: Text('Get Route'),
-            style: ElevatedButton.styleFrom(
-                minimumSize: const Size.fromHeight(30),
-                padding: EdgeInsets.all(12),
-                backgroundColor: Color.fromARGB(255, 102, 175, 212),
-                foregroundColor: Colors.white,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(32),
-                )),
-          ),
-        )
+          child: CustomButton(),
+        ),
       ],
     );
   }
+}
+
+class CustomButton extends StatelessWidget {
+  const CustomButton({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return ElevatedButton.icon(
+      icon: Icon(Icons.route),
+      onPressed: () {},
+      label: Text('Get Route'),
+      style: ElevatedButton.styleFrom(
+          minimumSize: const Size.fromHeight(30),
+          padding: EdgeInsets.all(12),
+          backgroundColor: Color.fromARGB(255, 102, 175, 212),
+          foregroundColor: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(32),
+          )),
+    );
+  }
+}
+
+Future<dynamic> RateDialog(BuildContext context) {
+  double userRate = 0;
+  return showDialog(
+      context: context,
+      builder: (context) {
+        return Dialog(
+          shadowColor: Colors.grey,
+          child: Container(
+            height: 160,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                const Text(
+                  'Rate the place',
+                  style: TextStyle(fontSize: 14, fontWeight: FontWeight.w800),
+                ),
+                RatingBar.builder(
+                    initialRating: userRate,
+                    minRating: 0,
+                    itemCount: 5,
+                    itemPadding: EdgeInsets.symmetric(horizontal: 2),
+                    allowHalfRating: true,
+                    itemBuilder: (context, _) => Icon(
+                          Icons.star,
+                          color: Colors.amber,
+                        ),
+                    onRatingUpdate: (rating) {
+                      print(rating);
+                      userRate = rating;
+                    }),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    TextButton(
+                        onPressed: () {
+                          Navigator.pop(context);
+                        },
+                        child: Text('Cancel')),
+                    TextButton(onPressed: () {}, child: Text('Send')),
+                  ],
+                )
+              ],
+            ),
+          ),
+        );
+      });
 }
