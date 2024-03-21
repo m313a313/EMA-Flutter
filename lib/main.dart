@@ -1,4 +1,7 @@
+import 'package:ema/place_info/Comments%20page/comments_page.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ema/cubit/auht_cubit/auth_cubit.dart';
 import 'package:ema/pages/home_page.dart';
@@ -27,7 +30,8 @@ class Market extends StatelessWidget {
 
             // colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
           ),
-          home: HomePage(),
+          home: CommentsPage(),
         ));
   }
 }
+
