@@ -4,12 +4,11 @@ import 'package:ema/place_info/General%20page/general_page.dart';
 import 'package:ema/place_info/Offers%20Page/offers_page.dart';
 import 'package:flutter/material.dart';
 import 'package:ema/Models/places.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 class PlacePage extends StatefulWidget {
   const PlacePage({super.key, required this.place});
-  final Places place;
+  final PlaceModel place;
 
   @override
   State<PlacePage> createState() => _PlacePageState();

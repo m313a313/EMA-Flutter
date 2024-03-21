@@ -17,7 +17,7 @@ class LoginCubit extends Cubit<LoginState> {
     try {
       emit(LoginLoading());
       Response response = await API().Post(
-          url: '$baseUrl' '/api/login',
+          url: '$baseUrl' '/api/user/login',
           body: {
             'email': email,
             'password': password,

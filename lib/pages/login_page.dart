@@ -19,36 +19,31 @@ class LoginPage extends StatelessWidget {
           if (state is LoginLoading)
             loadingIndicator = true;
           else if (state is LoginFalure) {
-              loadingIndicator = false;
+            loadingIndicator = false;
             showDialog(
                 context: context,
                 builder: (context) {
-                  return Dialog(
-                    child: Container(
-                      height: 55,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(12)
-                      ),
-                      child: Center(child: Row(
-                        children: [
-                        
-                          Padding(
-                            padding: const EdgeInsets.only(left:8.0),
-                            child: Text(state.msg),
-                          ),
-                          Spacer(),
-                          Padding(
-                            padding: const EdgeInsets.only(right:8.0),
-                            child: Icon(Icons.warning,color: Colors.amber,),
-                          ),
-                        ],
-                      ))),
+                  return Expanded(
+                    child: Dialog(
+                      child: Container(
+                          height: 55,
+                          decoration: BoxDecoration(
+                              color: Colors.red,
+                              borderRadius: BorderRadius.circular(12)),
+                          child: Center(
+                              child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                state.msg,
+                                style: TextStyle(color: Colors.white),
+                              ),
+                            ],
+                          ))),
+                    ),
                   );
                 });
-
-           
           } else {
-          
             loadingIndicator = false;
             Navigator.pushReplacement(
                 context, MaterialPageRoute(builder: (context) => HomePage()));

@@ -13,7 +13,7 @@ class GoogleMapPage extends StatefulWidget {
 }
 
 class _GoogleMapPageState extends State<GoogleMapPage> {
-  List<Places> places = allPlaces;
+  List<PlaceModel> places = allPlaces;
   final Completer<GoogleMapController> _controller =
       Completer<GoogleMapController>();
 
@@ -78,7 +78,7 @@ class CustomeShowModalBottomSheet extends StatelessWidget {
     super.key,
     required this.place,
   });
-  final Places place;
+  final PlaceModel place;
   @override
   Widget build(BuildContext context) {
     return Container(

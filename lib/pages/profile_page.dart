@@ -39,11 +39,11 @@ class _ProfilePageState extends State<ProfilePage> {
           : Padding(
             padding: EdgeInsets.symmetric(horizontal: 16),
             child: Column(children: [
-                CircleAvatar(
+            const   CircleAvatar(
                   radius: 30,
                   backgroundImage: AssetImage('images/avatar.png'),
                 ),
-                SizedBox(
+            const  SizedBox(
                   height: 10,
                 ),
                 Row(mainAxisAlignment: MainAxisAlignment.center, children: [

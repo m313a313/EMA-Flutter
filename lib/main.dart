@@ -1,3 +1,6 @@
+import 'package:ema/cubit/place_cubit/place_cubit.dart';
+import 'package:ema/pages/login_page.dart';
+import 'package:ema/pages/signup_page.dart';
 import 'package:ema/place_info/Comments%20page/comments_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -22,8 +25,11 @@ class Market extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-        create: ((context) => AuthCubit()),
+    return MultiBlocProvider(
+        providers: [
+          BlocProvider(create: (context) => AuthCubit()),
+          BlocProvider(create: (context) => PlaceCubit())
+        ],
         child: MaterialApp(
           theme: ThemeData(
             useMaterial3: true,
@@ -34,4 +40,3 @@ class Market extends StatelessWidget {
         ));
   }
 }
-

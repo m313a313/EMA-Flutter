@@ -17,7 +17,7 @@ class AuthCubit extends Cubit<AuthStates> {
     try {
       emit(LoadingState());
       Response response = await API().Post(
-          url: '$baseUrl' '/api/register',
+          url: '$baseUrl' '/api/user/register',
           body: {
             'email': email,
             'password': password,

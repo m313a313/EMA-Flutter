@@ -1,4 +1,9 @@
+import 'package:dio/dio.dart';
+import 'package:ema/Models/places.dart';
+import 'package:ema/cubit/place_cubit/place_cubit.dart';
+import 'package:ema/shared/constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class CommentsPage extends StatefulWidget {
   const CommentsPage({super.key});
@@ -9,6 +14,14 @@ class CommentsPage extends StatefulWidget {
 
 class _CommentsPageState extends State<CommentsPage> {
   bool isVisbile = false;
+  var placecubit;
+  @override
+  void initState() {
+    
+    super.initState();
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -56,6 +69,7 @@ class _CommentsPageState extends State<CommentsPage> {
                 ),
                 TextButton(
                     onPressed: () {
+                  
                       setState(() {
                         isVisbile = !isVisbile;
                       });
