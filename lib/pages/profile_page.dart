@@ -1,3 +1,4 @@
+import 'package:ema/Services/UserService.dart';
 import 'package:ema/pages/fav_page.dart';
 import 'package:flutter/material.dart';
 import 'package:lite_rolling_switch/lite_rolling_switch.dart';
@@ -18,17 +19,17 @@ class _ProfilePageState extends State<ProfilePage> {
   bool darkMode = false;
   UserModel? user;
   @override
-  // void initState() {
-  //   // TODO: implement initState
-  //   super.initState();
-  //   getUser();
-  // }
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getUser();
+  }
 
-  // Future<void> getUser() async {
-  //   user = await UserService().getUser();
-  //   isLoad = false;
-  //   setState(() {});
-  // }
+  Future<void> getUser() async {
+    user = await UserService().getUser();
+    isLoad = false;
+    setState(() {});
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,13 +38,13 @@ class _ProfilePageState extends State<ProfilePage> {
       body: isLoad
           ? const Center(child: CircularProgressIndicator())
           : Padding(
-            padding: EdgeInsets.symmetric(horizontal: 16),
-            child: Column(children: [
-            const   CircleAvatar(
+              padding: EdgeInsets.symmetric(horizontal: 16),
+              child: Column(children: [
+                const CircleAvatar(
                   radius: 30,
                   backgroundImage: AssetImage('images/avatar.png'),
                 ),
-            const  SizedBox(
+                const SizedBox(
                   height: 10,
                 ),
                 Row(mainAxisAlignment: MainAxisAlignment.center, children: [
@@ -58,7 +59,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   ),
                 ]),
                 Text(
-                  'joined in july 2023',
+                  user?.joined_at ?? 'unkwon',
                   style: TextStyle(color: Colors.grey, fontSize: 10),
                 ),
                 SizedBox(
@@ -122,7 +123,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     Expanded(
                       flex: 4,
                       child: Text(
-                        'user!.email',
+                        user?.email ?? 'unkown',
                         style: TextStyle(fontSize: 12),
                       ),
                     ),
@@ -213,8 +214,10 @@ class _ProfilePageState extends State<ProfilePage> {
                 ElevatedButton.icon(
                     onPressed: () {
                       LocalNetwork.clearCash();
-                      Navigator.pushReplacement(context,
-                          MaterialPageRoute(builder: (context) => SignupPage()));
+                      Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => SignupPage()));
                     },
                     style: ElevatedButton.styleFrom(
                         padding: EdgeInsets.all(10),
@@ -226,7 +229,7 @@ class _ProfilePageState extends State<ProfilePage> {
                     icon: Icon(Icons.logout),
                     label: Text('Logout'))
               ]),
-          ),
+            ),
     );
   }
 
@@ -245,14 +248,14 @@ class _ProfilePageState extends State<ProfilePage> {
             height: 36,
             child: LiteRollingSwitch(
               width: 90,
-              value: true,
-              textOn: 'Light',
+              value: darkMode,
+              textOn: 'Daek',
               textOnColor: Colors.white,
-              textOff: 'Dark',
-              colorOn: Colors.amber[700]!,
-              colorOff: Colors.black,
-              iconOn: Icons.light_mode,
-              iconOff: Icons.dark_mode,
+              textOff: 'Light',
+              colorOn: Colors.black,
+              colorOff: Colors.amber[700]!,
+              iconOn: Icons.dark_mode,
+              iconOff: Icons.light_mode,
               textSize: 14,
               onChanged: (val) {
                 darkMode = val;
@@ -283,16 +286,17 @@ class CustomeListTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      contentPadding: EdgeInsets.zero,
-      onTap: onTap,
-      leading: icon,
-      title: Text(title),
-      trailing: IconButton(onPressed:onTap, icon: Icon(
-        Icons.arrow_forward_ios_rounded,
-        color: Colors.black.withOpacity(.6),
-        size: 18,
-      ),)
-      
-    );
+        contentPadding: EdgeInsets.zero,
+        onTap: onTap,
+        leading: icon,
+        title: Text(title),
+        trailing: IconButton(
+          onPressed: onTap,
+          icon: Icon(
+            Icons.arrow_forward_ios_rounded,
+            color: Colors.black.withOpacity(.6),
+            size: 18,
+          ),
+        ));
   }
 }

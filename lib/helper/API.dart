@@ -3,19 +3,18 @@ import 'package:flutter/material.dart';
 
 class API {
   Dio dio = Dio();
-  Future<Response> Get({
-    required String Url,
-    @required String? token
-  }) async {
-      Map<String, String> headers = {
+  Future<Response> Get({required String Url, @required String? token}) async {
+    Map<String, String> headers = {
       'Accept': 'application/vnd.api+json',
       'Content-Type': 'application/vnd.api+json',
     };
+    
     if (token != null) {
       headers.addAll({'Authorization': 'Bearer $token'});
     }
     try {
-      Response response = await dio.get(Url,options: Options(headers: headers));
+      Response response =
+          await dio.get(Url, options: Options(headers: headers));
       print(response.statusCode);
       return response;
     } on DioException catch (e) {

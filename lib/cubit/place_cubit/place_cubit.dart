@@ -18,14 +18,12 @@ class PlaceCubit extends Cubit<PlaceState> {
       List<dynamic> imges = pl[i]['Place\'s Images'];
 
       for (var j = 0; j < imges.length; j++) {
-        print(j);
         imgs.add(pl[i]['Place\'s Images'][j]['Image']);
       }
-
+      
       PlaceModel place = PlaceModel.fromjsom(pl[i], imgs);
       allPlaces.add(place);
     }
-    print(allPlaces);
     return allPlaces;
   }
 }

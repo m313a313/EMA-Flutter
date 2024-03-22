@@ -15,7 +15,8 @@ class LocalNetwork {
 
   static Future<bool> insertUserTokenToCash(
       {required String key, required String token}) async {
-    token = token;
+    accessToken = token;
+
     return await prefs.setString(key, token);
   }
 
@@ -23,7 +24,7 @@ class LocalNetwork {
     return prefs.getInt('id');
   }
 
- static Future<bool> clearCash() {
-   return prefs.clear();
+  static Future<bool> clearCash() {
+    return prefs.clear();
   }
 }

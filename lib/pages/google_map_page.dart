@@ -23,6 +23,7 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
   );
   @override
   Widget build(BuildContext context) {
+
     return GoogleMap(
       mapType: MapType.normal,
       initialCameraPosition: _kGooglePlex,

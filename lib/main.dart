@@ -36,7 +36,7 @@ class Market extends StatelessWidget {
 
             // colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
           ),
-          home: CommentsPage(),
+          home: LoginPage(),
         ));
   }
 }
