@@ -1,4 +1,5 @@
 import 'package:ema/cubit/place_cubit/place_cubit.dart';
+import 'package:ema/pages/google_map_page.dart';
 import 'package:ema/pages/login_page.dart';
 import 'package:ema/pages/signup_page.dart';
 import 'package:ema/place_info/Comments%20page/comments_page.dart';
@@ -36,7 +37,7 @@ class Market extends StatelessWidget {
 
             // colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
           ),
-          home: LoginPage(),
+          home: GoogleMapPage(),
         ));
   }
 }

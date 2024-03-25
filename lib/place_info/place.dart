@@ -1,4 +1,3 @@
-import 'dart:ffi';
 
 import 'package:ema/place_info/General%20page/general_page.dart';
 import 'package:ema/place_info/Offers%20Page/offers_page.dart';

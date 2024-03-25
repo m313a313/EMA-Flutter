@@ -6,24 +6,30 @@ part 'place_state.dart';
 
 class PlaceCubit extends Cubit<PlaceState> {
   PlaceCubit() : super(PlaceInitial());
- 
+  Dio dio = Dio();
+
   List<PlaceModel> allPlaces = [];
   Future<List<PlaceModel>> fetchAllPlaces() async {
-    Dio dio = Dio();
-    Response response = await dio.get('$baseUrl/api/places');
-    Map<String, dynamic> jsondata = response.data;
-    List<dynamic> pl = jsondata['data'];
-    for (var i = 0; i < pl.length; i++) {
-      List<String> imgs = [];
-      List<dynamic> imges = pl[i]['Place\'s Images'];
+    try {
+      Response response = await dio.get('$baseUrl/api/places');
+      Map<String, dynamic> jsondata = response.data;
+      List<dynamic> pl = jsondata['data'];
+      for (var i = 0; i < pl.length; i++) {
+        List<String> imgs = [];
+        List<dynamic> imges = pl[i]['Place\'s Images'];
 
-      for (var j = 0; j < imges.length; j++) {
-        imgs.add(pl[i]['Place\'s Images'][j]['Image']);
+        for (var j = 0; j < imges.length; j++) {
+          imgs.add(pl[i]['Place\'s Images'][j]['Image']);
+        }
+
+        PlaceModel place = PlaceModel.fromjsom(pl[i], imgs);
+        allPlaces.add(place);
       }
-      
-      PlaceModel place = PlaceModel.fromjsom(pl[i], imgs);
-      allPlaces.add(place);
+      return allPlaces;
+    } on DioException catch (ex) {
+      print(ex);
+      return [];
+      // TODO
     }
-    return allPlaces;
   }
 }
