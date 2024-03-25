@@ -80,7 +80,7 @@ class _ComplaintDialogState extends State<ComplaintDialog> {
                   child: Column(
                     //  mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
-                      SizedBox(
+                      const SizedBox(
                         height: 20,
                       ),
                       Text(
