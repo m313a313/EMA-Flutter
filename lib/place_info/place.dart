@@ -1,5 +1,6 @@
 import 'dart:ffi';
 
+import 'package:ema/place_info/Comments%20page/comments_page.dart';
 import 'package:ema/place_info/General%20page/general_page.dart';
 import 'package:ema/place_info/Offers%20Page/offers_page.dart';
 import 'package:flutter/material.dart';
@@ -20,7 +21,7 @@ class _PlacePageState extends State<PlacePage> {
     return DefaultTabController(
       length: 3,
       child: Scaffold(
-        backgroundColor: const Color(0xffFAFAFA),
+        // backgroundColor: const Color(0xffFAFAFA),
         appBar: AppBar(
           //  backgroundColor: Colors.grey,
           title: Text(widget.place.placeName),
@@ -36,7 +37,7 @@ class _PlacePageState extends State<PlacePage> {
           centerTitle: true,
         ),
         body: const TabBarView(
-          children: [GeneralPage(), OffersPage(), MyWidget()],
+          children: [GeneralPage(), OffersPage(), CommentsPage()],
         ),
       ),
     );
@@ -62,7 +63,7 @@ class MyWidget extends StatelessWidget {
         builder: (context) {
           return Dialog(
             shadowColor: Colors.grey,
-            child: Container(          
+            child: Container(
               height: 160,
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,

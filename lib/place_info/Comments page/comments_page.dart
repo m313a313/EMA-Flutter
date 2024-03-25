@@ -17,15 +17,13 @@ class _CommentsPageState extends State<CommentsPage> {
   var placecubit;
   @override
   void initState() {
-    
     super.initState();
   }
-
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0XFFfafafa),
+      // backgroundColor: const Color(0XFFfafafa),
       appBar: AppBar(
         title: const Text('Comments'),
         elevation: 1,
@@ -65,11 +63,12 @@ class _CommentsPageState extends State<CommentsPage> {
                 const Padding(
                   padding: EdgeInsets.only(left: 56.0, right: 12),
                   child: Text(
-                      'All-electric vehicles, also referred to as battery electric vehicles (BEVs), have an electric motor instead of an internal combustion engine. The vehicle uses a large traction battery pack to power the electric motor and must be plugged in to a wall outlet or charging equipment'),
+                    'All-electric vehicles, also referred to as battery electric vehicles (BEVs), have an electric motor instead of an internal combustion engine. The vehicle uses a large traction battery pack to power the electric motor and must be plugged in to a wall outlet or charging equipment',
+                    // style: TextStyle(color: Colors.black),
+                  ),
                 ),
                 TextButton(
                     onPressed: () {
-                  
                       setState(() {
                         isVisbile = !isVisbile;
                       });
