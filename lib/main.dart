@@ -24,9 +24,8 @@ class Market extends StatelessWidget {
           BlocProvider(create: (context) => PlaceCubit())
         ],
         child: MaterialApp(
-          theme: darktMode,
-          // theme: lightMode,
-          // darkTheme: darktMode,
+          theme: lightMode,
+          darkTheme: darktMode,
           home: HomePage(),
         ));
   }
