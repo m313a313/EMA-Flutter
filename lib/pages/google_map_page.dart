@@ -1,9 +1,12 @@
 import 'dart:async';
 
+import 'package:ema/cubit/place_cubit/place_cubit.dart';
 import 'package:ema/place_info/place.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:ema/Models/places.dart';
+import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 
 class GoogleMapPage extends StatefulWidget {
   const GoogleMapPage({super.key});
@@ -16,63 +19,95 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
   List<PlaceModel> places = allPlaces;
   final Completer<GoogleMapController> _controller =
       Completer<GoogleMapController>();
+  late GoogleMapController googleMapController;
 
   static const CameraPosition _kGooglePlex = CameraPosition(
     target: LatLng(14.5410, 49.1242),
     zoom: 14,
   );
+
+  @override
+  void initState()async {
+    await fetchAllPlacess();
+    super.initState();
+  }
+
+  Future<void> fetchAllPlacess() async {
+ //   List<PlaceModel> places2=await BlocProvider.of<PlaceCubit>(context).fetchAllPlaces();
+  }
+
   @override
   Widget build(BuildContext context) {
-
-    return GoogleMap(
-      mapType: MapType.normal,
-      initialCameraPosition: _kGooglePlex,
-      onMapCreated: (GoogleMapController controller) {
-        _controller.complete(controller);
+    return BlocConsumer<PlaceCubit,PlaceState>(
+      listener: (context, state) {
+        // TODO: implement listener
       },
-      onTap: (location) {
-        // print(location.latitude);
-        // print(location.longitude);
-      },
-      circles: {
-        ...places.map(
-          (e) {
-            return Circle(
-              circleId: CircleId(e.placeName),
-              center: LatLng(e.lat, e.lng),
-              radius: 10,
-              strokeWidth: 1,
-              onTap: () {
-                print('object1');
-              },
-            );
-          },
-        )
-      },
-      markers: {
-        ...places.map(
-          (place) {
-            return Marker(
-              markerId: MarkerId(place.placeName),
-              position: LatLng(place.lat, place.lng),
-              onTap: () {
-                showModalBottomSheet(
-                  context: context,
-                  builder: (context) {
-                    final placeInfo = place;
-                    return CustomeShowModalBottomSheet(
-                      place: placeInfo,
-                    );
-                  },
-                );
-              },
-            );
-          },
-        )
+      builder: (context, state) {
+        return ModalProgressHUD(
+          inAsyncCall: false,
+          child: GoogleMap(
+            zoomControlsEnabled: false,
+            mapType: MapType.normal,
+            initialCameraPosition: _kGooglePlex,
+            onMapCreated: (GoogleMapController controller) {
+              _controller.complete(controller);
+              googleMapController = controller;
+              initMapStyle();
+            },
+            onTap: (location) {
+              // print(location.latitude);
+              // print(location.longitude);
+            },
+            circles: {
+              ...places.map(
+                (e) {
+                  return Circle(
+                    circleId: CircleId(e.placeName),
+                    center: LatLng(e.lat, e.lng),
+                    radius: 10,
+                    strokeWidth: 1,
+                    onTap: () {
+                      print('object1');
+                    },
+                  );
+                },
+              )
+            },
+            markers: {
+              ...places.map(
+                (place) {
+                  return Marker(
+                    markerId: MarkerId(place.placeName),
+                    position: LatLng(place.lat, place.lng),
+                    onTap: () {
+                      showModalBottomSheet(
+                        context: context,
+                        builder: (context) {
+                          final placeInfo = place;
+                          return CustomeShowModalBottomSheet(
+                            place: placeInfo,
+                          );
+                        },
+                      );
+                    },
+                  );
+                },
+              )
+            },
+          ),
+        );
       },
     );
   }
+
+  void initMapStyle() async {
+    var nightStyle = await DefaultAssetBundle.of(context)
+        .loadString('assets/map_styles/night_style.json');
+    googleMapController.setMapStyle(nightStyle);
+  }
 }
+
+//Custom bottom sheet
 
 class CustomeShowModalBottomSheet extends StatelessWidget {
   const CustomeShowModalBottomSheet({
