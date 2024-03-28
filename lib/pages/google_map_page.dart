@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:ema/cubit/place_cubit/place_cubit.dart';
 import 'package:ema/cubit/place_cubit/place_state.dart';
 import 'package:ema/place_info/place.dart';
+import 'package:ema/shared/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -145,7 +146,10 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
   void initMapStyle() async {
     var nightStyle = await DefaultAssetBundle.of(context)
         .loadString('assets/map_styles/night_style.json');
-    googleMapController.setMapStyle(nightStyle);
+        if(darkMode ==true)
+        googleMapController.setMapStyle(nightStyle);
+        else
+        googleMapController.setMapStyle('[]');
   }
 }
 

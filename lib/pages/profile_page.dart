@@ -1,6 +1,9 @@
 import 'package:ema/Services/UserService.dart';
+import 'package:ema/cubit/theme_cubit/theme_cubit.dart';
 import 'package:ema/pages/fav_page.dart';
+import 'package:ema/shared/constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lite_rolling_switch/lite_rolling_switch.dart';
 import 'package:ema/Models/user_model.dart';
 // import 'package:ema/Services/UserService.dart';
@@ -16,13 +19,12 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   bool isLoad = false;
-  bool darkMode = false;
   UserModel? user;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    getUser();
+    //  getUser();
   }
 
   Future<void> getUser() async {
@@ -244,26 +246,32 @@ class _ProfilePageState extends State<ProfilePage> {
             style: TextStyle(color: Colors.black),
           ),
           Spacer(),
-          SizedBox(
-            height: 36,
-            child: LiteRollingSwitch(
-              width: 90,
-              value: darkMode,
-              textOn: 'Daek',
-              textOnColor: Colors.white,
-              textOff: 'Light',
-              colorOn: Colors.black,
-              colorOff: Colors.amber[700]!,
-              iconOn: Icons.dark_mode,
-              iconOff: Icons.light_mode,
-              textSize: 14,
-              onChanged: (val) {
-                darkMode = val;
-                print('Current State of SWITCH IS: $darkMode');
-              },
-              onTap: () {},
-              onDoubleTap: () {},
-              onSwipe: () {},
+          Container(
+            decoration: BoxDecoration(
+                border: Border.all(color: Colors.white),
+                borderRadius: BorderRadius.circular(55)),
+            child: SizedBox(
+              height: 36,
+              child: LiteRollingSwitch(
+                width: 90,
+                value: darkMode,
+                textOn: 'Dark',
+                textOnColor: Colors.white,
+                textOff: 'Light',
+                colorOn: Colors.black,
+                colorOff: Colors.amber[700]!,
+                iconOn: Icons.dark_mode,
+                iconOff: Icons.light_mode,
+                textSize: 14,
+                onChanged: (val) {
+                  BlocProvider.of<ThemeCubit>(context).SwitchTheme(value: val);
+
+                  print('Current State of SWITCH IS: $darkMode');
+                },
+                onTap: () {},
+                onDoubleTap: () {},
+                onSwipe: () {},
+              ),
             ),
           ),
         ],
