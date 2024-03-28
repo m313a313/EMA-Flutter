@@ -1,6 +1,8 @@
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:ema/cubit/place_cubit/place_cubit.dart';
+import 'package:ema/cubit/place_cubit/place_state.dart';
 import 'package:ema/place_info/place.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -16,6 +18,7 @@ class GoogleMapPage extends StatefulWidget {
 }
 
 class _GoogleMapPageState extends State<GoogleMapPage> {
+  bool isLoad = false;
   List<PlaceModel> places = allPlaces;
   final Completer<GoogleMapController> _controller =
       Completer<GoogleMapController>();
@@ -27,24 +30,37 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
   );
 
   @override
-  void initState()async {
-    await fetchAllPlacess();
+  void initState() {
+    fetchAllPlacess();
     super.initState();
   }
 
-  Future<void> fetchAllPlacess() async {
- //   List<PlaceModel> places2=await BlocProvider.of<PlaceCubit>(context).fetchAllPlaces();
+  void fetchAllPlacess() {
+    Duration(seconds: 5);
+    BlocProvider.of<PlaceCubit>(context).fetchAllPlaces();
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocConsumer<PlaceCubit,PlaceState>(
+    return BlocConsumer<PlaceCubit, PlaceState>(
       listener: (context, state) {
-        // TODO: implement listener
+        print('$state bbb');
+        if (state is PlaceInfoLoadaing) {
+          print('kkkk');
+          isLoad = true;
+        } else if (state is PlaceInfoLoadFaild) {
+          isLoad = false;
+          errorDialog(context);
+          log('map loaded');
+        } else {
+          print('ffffff');
+          isLoad = false;
+        }
       },
       builder: (context, state) {
+        print('$state  mmm');
         return ModalProgressHUD(
-          inAsyncCall: false,
+          inAsyncCall: isLoad!,
           child: GoogleMap(
             zoomControlsEnabled: false,
             mapType: MapType.normal,
@@ -100,6 +116,32 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
     );
   }
 
+  Future<dynamic> errorDialog(BuildContext context) {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return Expanded(
+            child: Dialog(
+              child: Container(
+                  height: 55,
+                  decoration: BoxDecoration(
+                      color: Colors.red,
+                      borderRadius: BorderRadius.circular(12)),
+                  child: const Center(
+                      child: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        'Error in connection with server ',
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    ],
+                  ))),
+            ),
+          );
+        });
+  }
+
   void initMapStyle() async {
     var nightStyle = await DefaultAssetBundle.of(context)
         .loadString('assets/map_styles/night_style.json');
@@ -148,6 +190,7 @@ class CustomeShowModalBottomSheet extends StatelessWidget {
                     return PlacePage(place: place);
                   },
                 ));
+                //   BlocProvider.of<PlaceCubit>(context).fetchAllPlaces();
               },
               child: Text(
                 'Go to ${place.placeName} Place Page',

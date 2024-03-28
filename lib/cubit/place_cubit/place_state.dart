@@ -1,4 +1,3 @@
-part of 'place_cubit.dart';
 
 sealed class PlaceState {}
 
