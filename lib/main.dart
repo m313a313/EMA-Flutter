@@ -1,19 +1,11 @@
 import 'package:ema/cubit/place_cubit/place_cubit.dart';
 import 'package:ema/pages/google_map_page.dart';
-import 'package:ema/pages/login_page.dart';
-import 'package:ema/pages/signup_page.dart';
-import 'package:ema/place_info/Comments%20page/comments_page.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:ema/cubit/auht_cubit/auth_cubit.dart';
 import 'package:ema/pages/home_page.dart';
-// import 'package:ema/pages/signup_page.dart';
-// import 'package:ema/pages/splash_screen.dart';
-// import 'package:ema/shared/constants.dart';
 import 'package:ema/shared/network/local_network.dart';
-
+import 'package:ema/theme/theme.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await LocalNetwork.shared_prefrence_initlzation();
@@ -32,12 +24,9 @@ class Market extends StatelessWidget {
           BlocProvider(create: (context) => PlaceCubit())
         ],
         child: MaterialApp(
-          theme: ThemeData(
-            useMaterial3: true,
-
-            // colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
-          ),
-          home: GoogleMapPage(),
+          theme: lightMode,
+          darkTheme: darktMode,
+          home: HomePage(),
         ));
   }
 }

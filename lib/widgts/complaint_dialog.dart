@@ -1,26 +1,78 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-class ComplaintDialog extends StatelessWidget {
-  ComplaintDialog({super.key});
+class ComplaintDialog extends StatefulWidget {
+  const ComplaintDialog({super.key});
+
+  @override
+  State<ComplaintDialog> createState() => _ComplaintDialogState();
+}
+
+class _ComplaintDialogState extends State<ComplaintDialog> {
+  List<String> reportTypes = [
+    "Sales Report",
+    "Inventory Report",
+    "Customer Report"
+  ];
+
   final GlobalKey<FormState> formkey = GlobalKey();
+  String selectedReport = 'Sales Report';
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-          child: OutlinedButton(
-              onPressed: () {
-                displayDialog(context);
+        body: Column(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 16),
+          child: Container(
+            decoration: BoxDecoration(
+              border: Border.all(color: Colors.blueGrey),
+            ),
+            child: DropdownButton<String>(
+              padding: EdgeInsets.all(12),
+              underline: const SizedBox(),
+              value: selectedReport,
+              isExpanded: true, // Fill available space
+              items: reportTypes.map((String value) {
+                return DropdownMenuItem<String>(
+                  value: value,
+                  child: Text(value),
+                );
+              }).toList(),
+              onChanged: (String? newValue) {
+                setState(() {
+                  selectedReport = newValue!;
+                });
               },
-              child: Text('Press'))),
-    );
+            ),
+          ),
+        ),
+        // SizedBox(height: 50),
+        ElevatedButton(
+          onPressed: () {
+            // Navigate to information entry screen based on selectedReport
+            displayDialog(context, selectedReport);
+          },
+          child: Text("Enter Information"),
+        )
+      ],
+    )
+        // Center(
+        //     child: OutlinedButton(
+        //         onPressed: () {
+        //           displayDialog(context);
+        //         },
+        //         child: Text('Press'))),
+
+        );
   }
 
-  displayDialog(BuildContext context) {
+  displayDialog(BuildContext context, String selectedReport) {
     showDialog(
         context: context,
         builder: (context) {
-          return  Dialog(
+          return Dialog(
             child: Form(
               key: formkey,
               child: SizedBox(
@@ -29,6 +81,13 @@ class ComplaintDialog extends StatelessWidget {
                   child: Column(
                     //  mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
+                      const SizedBox(
+                        height: 20,
+                      ),
+                      Text(
+                        "Report: $selectedReport",
+                        style: const TextStyle(fontSize: 18),
+                      ),
                       CustomTextFiled(
                         filedName: 'Phone',
                         numericText: true,

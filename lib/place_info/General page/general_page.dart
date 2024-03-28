@@ -1,5 +1,6 @@
 import 'package:ema/place_info/General%20page/widgets/custom_place_imgs_listview.dart';
 import 'package:ema/place_info/General%20page/widgets/place_details_container.dart';
+import 'package:ema/widgts/complaint_dialog.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -46,14 +47,22 @@ class GeneralPage extends StatelessWidget {
                 )
               ],
             ),
-            const Column(
-              children: [
-                Icon(
-                  Icons.flag,
-                  size: 26,
-                ),
-                Text('Report')
-              ],
+            InkWell(
+              onTap: () {
+                showDialog(
+                  context: context,
+                  builder: (context) => ComplaintDialog(),
+                );
+              },
+              child: const Column(
+                children: [
+                  Icon(
+                    Icons.flag,
+                    size: 26,
+                  ),
+                  Text('Report')
+                ],
+              ),
             ),
             Column(
               children: [
@@ -61,7 +70,8 @@ class GeneralPage extends StatelessWidget {
                     onPressed: () => RateDialog(context),
                     icon: const Icon(Icons.star_border_rounded),
                     iconSize: 30,
-                    color: Colors.black.withOpacity(0.7)),
+                    // color: Colors.black.withOpacity(0.7)
+                    ),
                 Text('Add rate')
               ],
             ),
