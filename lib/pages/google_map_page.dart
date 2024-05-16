@@ -7,6 +7,7 @@ import 'package:ema/place_info/place.dart';
 import 'package:ema/shared/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:ema/Models/places.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
@@ -23,8 +24,7 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
   List<PlaceModel> places = allPlaces;
   final Completer<GoogleMapController> _controller =
       Completer<GoogleMapController>();
-  late GoogleMapController googleMapController;
-
+  late GoogleMapController? googleMapController;
   static const CameraPosition _kGooglePlex = CameraPosition(
     target: LatLng(14.5410, 49.1242),
     zoom: 14,
@@ -36,16 +36,23 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
     super.initState();
   }
 
-  void fetchAllPlacess() {
-    Duration(seconds: 5);
-    BlocProvider.of<PlaceCubit>(context).fetchAllPlaces();
+  void dispose() {
+    positionStream.cancel();
+    // TODO: implement dispose
+    super.dispose();
+  }
+
+  void fetchAllPlacess() async {
+    Duration(seconds: 6);
+    // places =
+    await BlocProvider.of<PlaceCubit>(context).fetchAllPlaces();
   }
 
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<PlaceCubit, PlaceState>(
-      listener: (context, state) {
-        print('$state bbb');
+      listener: (context, state) {},
+      builder: (context, state) {
         if (state is PlaceInfoLoadaing) {
           print('kkkk');
           isLoad = true;
@@ -57,61 +64,40 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
           print('ffffff');
           isLoad = false;
         }
-      },
-      builder: (context, state) {
         print('$state  mmm');
         return ModalProgressHUD(
-          inAsyncCall: isLoad!,
+          inAsyncCall: false,
           child: GoogleMap(
-            zoomControlsEnabled: false,
-            mapType: MapType.normal,
-            initialCameraPosition: _kGooglePlex,
-            onMapCreated: (GoogleMapController controller) {
-              _controller.complete(controller);
-              googleMapController = controller;
-              initMapStyle();
-            },
-            onTap: (location) {
-              // print(location.latitude);
-              // print(location.longitude);
-            },
-            circles: {
-              ...places.map(
-                (e) {
-                  return Circle(
-                    circleId: CircleId(e.placeName),
-                    center: LatLng(e.lat, e.lng),
-                    radius: 10,
-                    strokeWidth: 1,
-                    onTap: () {
-                      print('object1');
-                    },
-                  );
-                },
-              )
-            },
-            markers: {
-              ...places.map(
-                (place) {
-                  return Marker(
-                    markerId: MarkerId(place.placeName),
-                    position: LatLng(place.lat, place.lng),
-                    onTap: () {
-                      showModalBottomSheet(
-                        context: context,
-                        builder: (context) {
-                          final placeInfo = place;
-                          return CustomeShowModalBottomSheet(
-                            place: placeInfo,
-                          );
-                        },
-                      );
-                    },
-                  );
-                },
-              )
-            },
-          ),
+              zoomControlsEnabled: false,
+              mapType: MapType.normal,
+              initialCameraPosition: _kGooglePlex,
+              onMapCreated: (GoogleMapController controller) {
+                googleMapController = controller;
+                _controller.complete(controller);
+                setMyLocation();
+
+                initMapStyle();
+              },
+              onTap: (location) {
+                // print(location.latitude);
+                // print(location.longitude);
+              },
+              circles: {
+                ...places.map(
+                  (e) {
+                    return Circle(
+                      circleId: CircleId(e.placeName),
+                      center: LatLng(e.lat, e.lng),
+                      radius: 10,
+                      strokeWidth: 1,
+                      onTap: () {
+                        print('object1');
+                      },
+                    );
+                  },
+                )
+              },
+              markers: Set<Marker>.from(convertPlacesToMarkers(places))),
         );
       },
     );
@@ -146,10 +132,82 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
   void initMapStyle() async {
     var nightStyle = await DefaultAssetBundle.of(context)
         .loadString('assets/map_styles/night_style.json');
-        if(darkMode ==true)
-        googleMapController.setMapStyle(nightStyle);
-        else
-        googleMapController.setMapStyle('[]');
+    if (darkMode == true)
+      googleMapController?.setMapStyle(nightStyle);
+    else
+      googleMapController?.setMapStyle('[]');
+  }
+
+  Future<void> checkAndRequestLocationService() async {
+    bool isEnables = await Geolocator.isLocationServiceEnabled();
+    if (!isEnables) {
+      isEnables = await Geolocator.openLocationSettings();
+      if (!isEnables) {
+        //show error
+      }
+    }
+  }
+
+  Future<bool> checkAndRequestLocationPremission() async {
+    var premissionStatus = await Geolocator.checkPermission();
+    if (premissionStatus == LocationPermission.deniedForever) {
+      return false;
+    }
+    if (premissionStatus == LocationPermission.denied) {
+      premissionStatus = await Geolocator.requestPermission();
+      if (premissionStatus != LocationPermission.always ||
+          premissionStatus != LocationPermission.whileInUse) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  late StreamSubscription<Position> positionStream;
+  void getLocationData() {
+    positionStream = Geolocator.getPositionStream(
+        locationSettings: LocationSettings(
+      accuracy: LocationAccuracy.best,
+      distanceFilter: 0,
+    )).listen((Position locationData) {
+      var cameraPostion = CameraPosition(
+          zoom: 14,
+          target: LatLng(locationData.latitude, locationData.longitude));
+      googleMapController
+          ?.animateCamera(CameraUpdate.newCameraPosition(cameraPostion));
+
+    //بيانات موقع المستخدم اشتغل من هنا عليها عشان تضيف الماركر في الخريطة ^_^  locationData.latitude, locationData.longitude ل
+    });
+  }
+
+  void setMyLocation() async {
+    await checkAndRequestLocationService();
+    bool hasPremission = await checkAndRequestLocationPremission();
+    if (hasPremission)
+      getLocationData();
+    else {
+      //error
+    }
+  }
+
+  List<Marker> convertPlacesToMarkers(List<PlaceModel> places) {
+    return places.map((place) {
+      return Marker(
+        markerId: MarkerId(place.placeName),
+        position: LatLng(place.lat, place.lng),
+        onTap: () {
+          showModalBottomSheet(
+            context: context,
+            builder: (context) {
+              final placeInfo = place;
+              return CustomeShowModalBottomSheet(
+                place: placeInfo,
+              );
+            },
+          );
+        },
+      );
+    }).toList();
   }
 }
 
@@ -189,11 +247,14 @@ class CustomeShowModalBottomSheet extends StatelessWidget {
           ),
           ElevatedButton(
               onPressed: () {
-                Navigator.push(context, MaterialPageRoute(
-                  builder: (context) {
-                    return PlacePage(place: place);
-                  },
-                ));
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) {
+                          return PlacePage(place: place);
+                        },
+                        settings: RouteSettings(
+                            name: 'placeDetails', arguments: place)));
                 //   BlocProvider.of<PlaceCubit>(context).fetchAllPlaces();
               },
               child: Text(

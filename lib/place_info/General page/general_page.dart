@@ -1,3 +1,4 @@
+import 'package:ema/Models/places.dart';
 import 'package:ema/place_info/General%20page/widgets/custom_place_imgs_listview.dart';
 import 'package:ema/place_info/General%20page/widgets/place_details_container.dart';
 import 'package:ema/widgts/complaint_dialog.dart';
@@ -7,7 +8,8 @@ import 'package:flutter/widgets.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 
 class GeneralPage extends StatelessWidget {
-  const GeneralPage({super.key});
+  const GeneralPage({required this.placeinfo, super.key});
+  final PlaceModel placeinfo;
 
   @override
   Widget build(BuildContext context) {
@@ -67,11 +69,11 @@ class GeneralPage extends StatelessWidget {
             Column(
               children: [
                 IconButton(
-                    onPressed: () => RateDialog(context),
-                    icon: const Icon(Icons.star_border_rounded),
-                    iconSize: 30,
-                    // color: Colors.black.withOpacity(0.7)
-                    ),
+                  onPressed: () => RateDialog(context),
+                  icon: const Icon(Icons.star_border_rounded),
+                  iconSize: 30,
+                  // color: Colors.black.withOpacity(0.7)
+                ),
                 Text('Add rate')
               ],
             ),
@@ -82,13 +84,18 @@ class GeneralPage extends StatelessWidget {
               ],
             ),
             Column(
-              children: [Icon(Icons.add, size: 32), Text('Save')],
+              children: [
+                Icon(Icons.favorite_border, size: 26),
+                Text('Favorite')
+              ],
             )
           ],
         ),
         Padding(
           padding: EdgeInsets.symmetric(horizontal: 8.0),
-          child: PlaceDetailsContainer(),
+          child: PlaceDetailsContainer(
+            desc: placeinfo.placeDescription,
+          ),
         ),
         Padding(
           padding: const EdgeInsets.all(8.0),

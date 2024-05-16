@@ -3,9 +3,10 @@ import 'package:flutter/widgets.dart';
 
 class PlaceDetailsContainer extends StatelessWidget {
   const PlaceDetailsContainer({
+    required this.desc,
     super.key,
   });
-
+  final String desc;
   @override
   Widget build(BuildContext context) {
     // return Container(
@@ -27,18 +28,32 @@ class PlaceDetailsContainer extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Container(
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(12),
-                    color: Color(0xffE8E8E8)),
-                child: Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 8.0, vertical: 2),
-                  child: Text(
-                    'Market',
-                    style: TextStyle(color: Colors.black),
+              Row(
+                children: [
+                  Container(
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(12),
+                        color: Color(0xffE8E8E8)),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8.0, vertical: 2),
+                      child: Text(
+                        'Market',
+                        style: TextStyle(color: Colors.black),
+                      ),
+                    ),
                   ),
-                ),
+                  Spacer(),
+                  Padding(
+                    padding: const EdgeInsets.only(right: 8.0),
+                    child: Icon(
+                      Icons.remove_red_eye_outlined,
+                      color: Colors.black.withOpacity(.8),
+                      size: 20,
+                    ),
+                  ),
+                  Text('313', style: TextStyle(fontSize: 14))
+                ],
               ),
               SizedBox(
                 height: 6,
@@ -48,7 +63,7 @@ class PlaceDetailsContainer extends StatelessWidget {
                 style: TextStyle(fontSize: 14),
               ),
               Text(
-                'An electric car or electric vehicle (EV) is a passenger automobile that is propelled by an electric traction motor, using only energy stored in on-board batteries. Compared to conventional internal combustion engine (ICE) vehicles, electric cars are quieter, more responsive, have superior energy conversion efficiency and no exhaust emissions and lower overall vehicle emissions',
+                desc,
                 style: TextStyle(color: Color(0xff808080)),
               ),
               SizedBox(

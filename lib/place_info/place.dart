@@ -35,8 +35,8 @@ class _PlacePageState extends State<PlacePage> {
           ]),
           centerTitle: true,
         ),
-        body: const TabBarView(
-          children: [GeneralPage(), OffersPage(), CommentsPage()],
+        body:  TabBarView(
+          children: [GeneralPage(placeinfo: widget.place,),const OffersPage(),const CommentsPage()],
         ),
       ),
     );
