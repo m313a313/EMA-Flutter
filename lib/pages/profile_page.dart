@@ -49,7 +49,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 const SizedBox(
                   height: 10,
                 ),
-                Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+               const Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                   Text(
                     'change the profile picture',
                     style: TextStyle(color: Colors.grey, fontSize: 10),

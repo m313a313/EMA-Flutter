@@ -37,8 +37,10 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
   }
 
   void dispose() {
-    positionStream.cancel();
+    
+    positionStream?.cancel();
     // TODO: implement dispose
+
     super.dispose();
   }
 
@@ -67,37 +69,47 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
         print('$state  mmm');
         return ModalProgressHUD(
           inAsyncCall: false,
-          child: GoogleMap(
-              zoomControlsEnabled: false,
-              mapType: MapType.normal,
-              initialCameraPosition: _kGooglePlex,
-              onMapCreated: (GoogleMapController controller) {
-                googleMapController = controller;
-                _controller.complete(controller);
+          child: Scaffold(
+            floatingActionButton: FloatingActionButton.extended(
+              foregroundColor: Colors.white,
+              backgroundColor: Colors.blueAccent,
+              onPressed: () {
                 setMyLocation();
+              },
+              label: const Text('Current Location'),
+              icon: const Icon(Icons.my_location_outlined),
+            ),
+            body: GoogleMap(
+                zoomControlsEnabled: false,
+                mapType: MapType.normal,
+                initialCameraPosition: _kGooglePlex,
+                onMapCreated: (GoogleMapController controller) {
+                  googleMapController = controller;
+                  _controller.complete(controller);
 
-                initMapStyle();
-              },
-              onTap: (location) {
-                // print(location.latitude);
-                // print(location.longitude);
-              },
-              circles: {
-                ...places.map(
-                  (e) {
-                    return Circle(
-                      circleId: CircleId(e.placeName),
-                      center: LatLng(e.lat, e.lng),
-                      radius: 10,
-                      strokeWidth: 1,
-                      onTap: () {
-                        print('object1');
-                      },
-                    );
-                  },
-                )
-              },
-              markers: Set<Marker>.from(convertPlacesToMarkers(places))),
+                  initMapStyle();
+                },
+                onTap: (location) {
+                  // print(location.latitude);
+                  // print(location.longitude);
+                },
+                circles: {
+                  ...places.map(
+                    (e) {
+                      return Circle(
+                        circleId: CircleId(e.placeName),
+                        center: LatLng(e.lat, e.lng),
+                        radius: 10,
+                        strokeWidth: 1,
+                        onTap: () {
+                          print('object1');
+                        },
+                      );
+                    },
+                  )
+                },
+                markers: Set<Marker>.from(convertPlacesToMarkers(places))),
+          ),
         );
       },
     );
@@ -138,14 +150,16 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
       googleMapController?.setMapStyle('[]');
   }
 
-  Future<void> checkAndRequestLocationService() async {
+  Future<bool> checkAndRequestLocationService() async {
     bool isEnables = await Geolocator.isLocationServiceEnabled();
     if (!isEnables) {
       isEnables = await Geolocator.openLocationSettings();
+
       if (!isEnables) {
-        //show error
+        return false;
       }
     }
+    return true;
   }
 
   Future<bool> checkAndRequestLocationPremission() async {
@@ -163,20 +177,20 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
     return true;
   }
 
-  late StreamSubscription<Position> positionStream;
+  StreamSubscription<Position>? positionStream;
   void getLocationData() {
     positionStream = Geolocator.getPositionStream(
         locationSettings: LocationSettings(
       accuracy: LocationAccuracy.best,
       distanceFilter: 0,
     )).listen((Position locationData) {
-      var cameraPostion = CameraPosition(
+      var cameraPostion =positionStream != null ? CameraPosition(
           zoom: 14,
-          target: LatLng(locationData.latitude, locationData.longitude));
-      googleMapController
-          ?.animateCamera(CameraUpdate.newCameraPosition(cameraPostion));
-
-    //بيانات موقع المستخدم اشتغل من هنا عليها عشان تضيف الماركر في الخريطة ^_^  locationData.latitude, locationData.longitude ل
+          target: LatLng(locationData.latitude, locationData.longitude)):null;
+          if (cameraPostion !=null){
+      googleMapController?.animateCamera(CameraUpdate.newCameraPosition(cameraPostion));
+    }
+      //بيانات موقع المستخدم اشتغل من هنا عليها عشان تضيف الماركر في الخريطة ^_^  locationData.latitude, locationData.longitude ل
     });
   }
 
