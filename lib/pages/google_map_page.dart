@@ -23,6 +23,11 @@ class GoogleMapPage extends StatefulWidget {
 }
 
 class _GoogleMapPageState extends State<GoogleMapPage> {
+  double? latu;
+  double? lngu;
+  BitmapDescriptor currenLocationIcon = BitmapDescriptor.defaultMarker;
+  BitmapDescriptor schoolIcon = BitmapDescriptor.defaultMarker;
+  BitmapDescriptor hospitalIcon = BitmapDescriptor.defaultMarker;
   bool isLoad = false;
   List<PlaceModel> places = []; //allPlaces;
   final Completer<GoogleMapController> _controller =
@@ -48,7 +53,8 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
 
   void fetchAllPlacess() async {
     Duration(seconds: 6);
-    places = await BlocProvider.of<PlaceCubit>(context).fetchAllPlaces();
+    // places =
+    await BlocProvider.of<PlaceCubit>(context).fetchAllPlaces();
   }
 
   @override
@@ -185,15 +191,12 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
       accuracy: LocationAccuracy.best,
       distanceFilter: 0,
     )).listen((Position locationData) {
-      var cameraPostion = positionStream != null
-          ? CameraPosition(
-              zoom: 14,
-              target: LatLng(locationData.latitude, locationData.longitude))
-          : null;
-      if (cameraPostion != null) {
-        googleMapController
-            ?.animateCamera(CameraUpdate.newCameraPosition(cameraPostion));
-      }
+      var cameraPostion =positionStream != null ? CameraPosition(
+          zoom: 14,
+          target: LatLng(locationData.latitude, locationData.longitude)):null;
+          if (cameraPostion !=null){
+      googleMapController?.animateCamera(CameraUpdate.newCameraPosition(cameraPostion));
+    }
       //بيانات موقع المستخدم اشتغل من هنا عليها عشان تضيف الماركر في الخريطة ^_^  locationData.latitude, locationData.longitude ل
     });
   }
@@ -208,23 +211,97 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
     }
   }
 
+  void addCustomIcon() {
+    BitmapDescriptor.fromAssetImage(
+            const ImageConfiguration(size: Size(10, 10)),
+            'assets/current_location.png')
+        .then(
+      (icon) {
+        setState(() {
+          currenLocationIcon = icon;
+        });
+      },
+    );
+    BitmapDescriptor.fromAssetImage(
+            const ImageConfiguration(size: Size(10, 10)), 'assets/school.png')
+        .then(
+      (icon) {
+        setState(() {
+          schoolIcon = icon;
+        });
+      },
+    );
+    BitmapDescriptor.fromAssetImage(
+            const ImageConfiguration(size: Size(10, 10)), 'assets/hospital.png')
+        .then(
+      (icon) {
+        setState(() {
+          hospitalIcon = icon;
+        });
+      },
+    );
+  }
+
   List<Marker> convertPlacesToMarkers(List<PlaceModel> places) {
     return places.map((place) {
-      return Marker(
-        markerId: MarkerId(place.placeName),
-        position: LatLng(place.lat, place.lng),
-        onTap: () {
-          showModalBottomSheet(
-            context: context,
-            builder: (context) {
-              final placeInfo = place;
-              return CustomeShowModalBottomSheet(
-                place: placeInfo,
-              );
-            },
-          );
-        },
-      );
+      if (place.placeName == 'curren_location' && latu != null&& lngu != null  ) {
+        return Marker(
+          markerId: MarkerId(place.placeName),
+          position: LatLng(latu!, lngu!),
+          icon: currenLocationIcon,
+        );
+      } else if (place.placeCategory == 'school') {
+        return Marker(
+          markerId: MarkerId(place.placeName),
+          position: LatLng(place.lat, place.lng),
+          icon: schoolIcon,
+          onTap: () {
+            showModalBottomSheet(
+              context: context,
+              builder: (context) {
+                final placeInfo = place;
+                return CustomeShowModalBottomSheet(
+                  place: placeInfo,
+                );
+              },
+            );
+          },
+        );
+      } else if (place.placeCategory == 'hospital') {
+        return Marker(
+          markerId: MarkerId(place.placeName),
+          position: LatLng(place.lat, place.lng),
+          icon: hospitalIcon,
+          onTap: () {
+            showModalBottomSheet(
+              context: context,
+              builder: (context) {
+                final placeInfo = place;
+                return CustomeShowModalBottomSheet(
+                  place: placeInfo,
+                );
+              },
+            );
+          },
+        );
+      } else {
+        return Marker(
+          markerId: MarkerId(place.placeName),
+          position: LatLng(place.lat, place.lng),
+          // icon: schoolIcon,
+          onTap: () {
+            showModalBottomSheet(
+              context: context,
+              builder: (context) {
+                final placeInfo = place;
+                return CustomeShowModalBottomSheet(
+                  place: placeInfo,
+                );
+              },
+            );
+          },
+        );
+      }
     }).toList();
   }
 }

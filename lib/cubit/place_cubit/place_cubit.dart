@@ -1,3 +1,5 @@
+// ignore_for_file: dead_code
+
 import 'package:dio/dio.dart';
 import 'package:ema/Models/places.dart';
 import 'package:ema/cubit/place_cubit/place_state.dart';
