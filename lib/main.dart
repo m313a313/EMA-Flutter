@@ -1,6 +1,7 @@
 import 'package:ema/cubit/place_cubit/place_cubit.dart';
 import 'package:ema/cubit/theme_cubit/theme_cubit.dart';
 import 'package:ema/cubit/theme_cubit/theme_state.dart';
+import 'package:ema/pages/login_page.dart';
 import 'package:ema/shared/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -32,7 +33,7 @@ class Market extends StatelessWidget {
             return MaterialApp(
               theme: darkMode ? darktMode : lightMode,
               darkTheme: darktMode,
-              home: HomePage(),
+              home: LoginPage(),
             );
           },
         ));

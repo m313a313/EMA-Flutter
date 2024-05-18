@@ -1,29 +1,35 @@
 // import 'package:ema/pages/complaints_page.dart';
+import 'package:ema/Models/places.dart';
 import 'package:ema/pages/dd.dart';
 import 'package:ema/pages/google_map_page.dart';
 import 'package:ema/pages/nearby_places.dart';
 import 'package:ema/pages/profile_page.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({super.key});
-
+  const HomePage({super.key, @required this.selectedPlace});
+  final PlaceModel? selectedPlace;
   @override
   State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
   int _currentIndex = 0;
+ 
   final List _pages = [
-    const GoogleMapPage(),
+   const GoogleMapPage(
+     selectedPlace:null,
+    ),
     DropDownHelper(),
     const NearbyPlaces(),
     const ProfilePage()
   ];
   @override
   Widget build(BuildContext context) {
+    PlaceModel? selectedPlace =widget.selectedPlace;
     return Scaffold(
-      body: _pages[_currentIndex],
+      body: _currentIndex ==0 ?  GoogleMapPage(selectedPlace:selectedPlace): _pages[_currentIndex],
       bottomNavigationBar: customBottomNavigationBar(),
     );
   }

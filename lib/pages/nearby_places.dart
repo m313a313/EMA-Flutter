@@ -1,6 +1,9 @@
 import 'dart:async';
 
+import 'package:ema/Models/places.dart';
 import 'package:ema/pages/dd.dart';
+import 'package:ema/pages/google_map_page.dart';
+import 'package:ema/pages/home_page.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
@@ -139,7 +142,19 @@ class _NearbyPlacesState extends State<NearbyPlaces> {
                   backgroundColor: const Color(0xfff54f77),
                   disabledBackgroundColor:
                       Color.fromARGB(255, 245, 90, 126).withOpacity(.9)),
-              onPressed: is_container_enabled == 0 ? null : () {},
+              onPressed: is_container_enabled == 0
+                  ? null
+                  : () {
+                      showModalBottomSheet(
+                        context: context,
+                        builder: (context) {
+                          //    final placeInfo = place;
+                          return CustomeShowModalBottomSheet(
+                              //    place: placeInfo,
+                              );
+                        },
+                      );
+                    },
               child: const Text(
                 "Find place",
                 style: TextStyle(
@@ -188,9 +203,9 @@ class _NearbyPlacesState extends State<NearbyPlaces> {
   }
 
   void setMyLocation() async {
-    await checkAndRequestLocationService();
+    bool isEnabled = await checkAndRequestLocationService();
     bool hasPremission = await checkAndRequestLocationPremission();
-    if (hasPremission)
+    if (hasPremission && isEnabled)
       getLocationData();
     else {
       //error
@@ -229,6 +244,64 @@ class CategoryContainer extends StatelessWidget {
                   is_container_enabled == index ? Colors.white : Colors.black,
               fontWeight: FontWeight.w500),
         ),
+      ),
+    );
+  }
+}
+
+class CustomeShowModalBottomSheet extends StatelessWidget {
+  const CustomeShowModalBottomSheet({
+    super.key,
+    // required this.place,
+  });
+//  final PlaceModel place;
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: 200,
+      width: MediaQuery.of(context).size.width,
+      decoration: const BoxDecoration(
+          color: Colors.blue,
+          borderRadius: BorderRadius.only(
+              topRight: Radius.circular(20), topLeft: Radius.circular(20))),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(12.0),
+            child: Container(
+              width: 100,
+              height: 5,
+              decoration: BoxDecoration(
+                  color: Colors.white, borderRadius: BorderRadius.circular(20)),
+            ),
+          ),
+          Text(
+            ';',
+            //  place.placeName,
+            style: const TextStyle(
+                color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),
+          ),
+          ElevatedButton(
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) {
+                          return const GoogleMapPage();
+                        },
+                        settings: RouteSettings(
+                            //   name: 'placeDetails', arguments: place
+                            )));
+                //   BlocProvider.of<PlaceCubit>(context).fetchAllPlaces();
+              },
+              child: Text(
+                'c',
+                // 'Go to ${place.placeName} Place Page',
+                style: const TextStyle(),
+              ))
+        ],
       ),
     );
   }

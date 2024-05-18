@@ -10,7 +10,6 @@ class PlaceCubit extends Cubit<PlaceState> {
   List<PlaceModel> allPlaces = [];
   Future<List<PlaceModel>> fetchAllPlaces() async {
     print('$state rrrrr');
-return [];
 
     emit(PlaceInfoLoadaing());
 
@@ -20,10 +19,10 @@ return [];
       List<dynamic> pl = jsondata['data'];
       for (var i = 0; i < pl.length; i++) {
         List<String> imgs = [];
-        List<dynamic> imges = pl[i]['Place\'s Images'];
+        List<dynamic> imges = pl[i]['place_images'];
 
         for (var j = 0; j < imges.length; j++) {
-          imgs.add(pl[i]['Place\'s Images'][j]['Image']);
+          imgs.add(pl[i]['place_images'][j]['image']);
         }
 
         PlaceModel place = PlaceModel.fromjsom(pl[i], imgs);

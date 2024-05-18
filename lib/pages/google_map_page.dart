@@ -1,8 +1,10 @@
 import 'dart:async';
 import 'dart:developer';
 
+import 'package:dio/dio.dart';
 import 'package:ema/cubit/place_cubit/place_cubit.dart';
 import 'package:ema/cubit/place_cubit/place_state.dart';
+import 'package:ema/helper/API.dart';
 import 'package:ema/place_info/place.dart';
 import 'package:ema/shared/constants.dart';
 import 'package:flutter/material.dart';
@@ -13,7 +15,8 @@ import 'package:ema/Models/places.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 
 class GoogleMapPage extends StatefulWidget {
-  const GoogleMapPage({super.key});
+  const GoogleMapPage({super.key, @required this.selectedPlace});
+  final PlaceModel? selectedPlace;
 
   @override
   State<GoogleMapPage> createState() => _GoogleMapPageState();
@@ -21,7 +24,7 @@ class GoogleMapPage extends StatefulWidget {
 
 class _GoogleMapPageState extends State<GoogleMapPage> {
   bool isLoad = false;
-  List<PlaceModel> places = allPlaces;
+  List<PlaceModel> places = []; //allPlaces;
   final Completer<GoogleMapController> _controller =
       Completer<GoogleMapController>();
   late GoogleMapController? googleMapController;
@@ -37,7 +40,6 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
   }
 
   void dispose() {
-    
     positionStream?.cancel();
     // TODO: implement dispose
 
@@ -46,8 +48,7 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
 
   void fetchAllPlacess() async {
     Duration(seconds: 6);
-    // places =
-    await BlocProvider.of<PlaceCubit>(context).fetchAllPlaces();
+    places = await BlocProvider.of<PlaceCubit>(context).fetchAllPlaces();
   }
 
   @override
@@ -68,7 +69,7 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
         }
         print('$state  mmm');
         return ModalProgressHUD(
-          inAsyncCall: false,
+          inAsyncCall: isLoad,
           child: Scaffold(
             floatingActionButton: FloatingActionButton.extended(
               foregroundColor: Colors.white,
@@ -142,11 +143,11 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
   }
 
   void initMapStyle() async {
-    var nightStyle = await DefaultAssetBundle.of(context)
-        .loadString('assets/map_styles/night_style.json');
-    if (darkMode == true)
+    if (darkMode == true) {
+      var nightStyle = await DefaultAssetBundle.of(context)
+          .loadString('assets/map_styles/night_style.json');
       googleMapController?.setMapStyle(nightStyle);
-    else
+    } else
       googleMapController?.setMapStyle('[]');
   }
 
@@ -184,12 +185,15 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
       accuracy: LocationAccuracy.best,
       distanceFilter: 0,
     )).listen((Position locationData) {
-      var cameraPostion =positionStream != null ? CameraPosition(
-          zoom: 14,
-          target: LatLng(locationData.latitude, locationData.longitude)):null;
-          if (cameraPostion !=null){
-      googleMapController?.animateCamera(CameraUpdate.newCameraPosition(cameraPostion));
-    }
+      var cameraPostion = positionStream != null
+          ? CameraPosition(
+              zoom: 14,
+              target: LatLng(locationData.latitude, locationData.longitude))
+          : null;
+      if (cameraPostion != null) {
+        googleMapController
+            ?.animateCamera(CameraUpdate.newCameraPosition(cameraPostion));
+      }
       //بيانات موقع المستخدم اشتغل من هنا عليها عشان تضيف الماركر في الخريطة ^_^  locationData.latitude, locationData.longitude ل
     });
   }
@@ -260,7 +264,15 @@ class CustomeShowModalBottomSheet extends StatelessWidget {
                 color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),
           ),
           ElevatedButton(
-              onPressed: () {
+              onPressed: () async {
+                try {
+                  Response response = await API().Get(
+                      Url: '$baseUrl' '/api/user/place/${place.id}',
+                      token: accessToken);
+                } on Exception catch (e) {
+                  // TODO
+                }
+
                 Navigator.push(
                     context,
                     MaterialPageRoute(
