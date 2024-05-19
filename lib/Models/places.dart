@@ -23,14 +23,14 @@ class PlaceModel {
   factory PlaceModel.fromjsom(jsondata, imgs) {
     return PlaceModel(
       id: jsondata['id'],
-      placeName: jsondata['Place\'s Name'],
-      placeDescription: jsondata['The Description of place'],
-      placeAddress: jsondata['Place\'s address'],
-      lat:double.parse(jsondata['Place\'s latitude']) ,
-      lng:double.parse(jsondata['Place\'s longitude']) ,
-      placeViews: jsondata['The Number of Place\'s view'],
-      placeCategory: jsondata['The Category of the place']['Category Title'],
-      placeImgs:imgs,
+      placeName: jsondata['place_name'],
+      placeDescription: jsondata['place_description'],
+      placeAddress: jsondata['place_address'],
+      lat: double.parse(jsondata['place_latitude']),
+      lng: double.parse(jsondata['place_longitude']),
+      placeViews: jsondata['place_view'],
+      placeCategory: jsondata['place_category']['category_title'],
+      placeImgs: imgs,
     );
   }
 }

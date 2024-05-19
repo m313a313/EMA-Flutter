@@ -29,7 +29,7 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
   BitmapDescriptor schoolIcon = BitmapDescriptor.defaultMarker;
   BitmapDescriptor hospitalIcon = BitmapDescriptor.defaultMarker;
   bool isLoad = false;
-  List<PlaceModel> places = []; //allPlaces;
+  List<PlaceModel> places = allPlaces;
   final Completer<GoogleMapController> _controller =
       Completer<GoogleMapController>();
   late GoogleMapController? googleMapController;
@@ -40,7 +40,7 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
 
   @override
   void initState() {
-    fetchAllPlacess();
+    //  fetchAllPlacess();
     super.initState();
   }
 
@@ -53,8 +53,8 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
 
   void fetchAllPlacess() async {
     Duration(seconds: 6);
-    // places =
-    await BlocProvider.of<PlaceCubit>(context).fetchAllPlaces();
+    places = await BlocProvider.of<PlaceCubit>(context).fetchAllPlaces();
+    addCustomIcon();
   }
 
   @override
@@ -154,7 +154,8 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
           .loadString('assets/map_styles/night_style.json');
       googleMapController?.setMapStyle(nightStyle);
     } else
-      googleMapController?.setMapStyle('[]');
+      googleMapController?.setMapStyle(
+          '[{"featureType": "poi","stylers": [{"visibility": "off"}]}]');
   }
 
   Future<bool> checkAndRequestLocationService() async {
@@ -191,12 +192,15 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
       accuracy: LocationAccuracy.best,
       distanceFilter: 0,
     )).listen((Position locationData) {
-      var cameraPostion =positionStream != null ? CameraPosition(
-          zoom: 14,
-          target: LatLng(locationData.latitude, locationData.longitude)):null;
-          if (cameraPostion !=null){
-      googleMapController?.animateCamera(CameraUpdate.newCameraPosition(cameraPostion));
-    }
+      var cameraPostion = positionStream != null
+          ? CameraPosition(
+              zoom: 14,
+              target: LatLng(locationData.latitude, locationData.longitude))
+          : null;
+      if (cameraPostion != null) {
+        googleMapController
+            ?.animateCamera(CameraUpdate.newCameraPosition(cameraPostion));
+      }
       //بيانات موقع المستخدم اشتغل من هنا عليها عشان تضيف الماركر في الخريطة ^_^  locationData.latitude, locationData.longitude ل
     });
   }
@@ -244,7 +248,9 @@ class _GoogleMapPageState extends State<GoogleMapPage> {
 
   List<Marker> convertPlacesToMarkers(List<PlaceModel> places) {
     return places.map((place) {
-      if (place.placeName == 'curren_location' && latu != null&& lngu != null  ) {
+      if (place.placeName == 'curren_location' &&
+          latu != null &&
+          lngu != null) {
         return Marker(
           markerId: MarkerId(place.placeName),
           position: LatLng(latu!, lngu!),
